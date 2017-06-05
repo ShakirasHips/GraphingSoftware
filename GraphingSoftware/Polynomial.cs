@@ -109,5 +109,20 @@ namespace GraphingSoftware
         {
             throw new NotImplementedException();
         }
+
+        public static Polynomial operator-(Polynomial a, Polynomial b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Polynomial operator *(Polynomial a, Polynomial b)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Polynomial operator /(Polynomial a, Polynomial b)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
