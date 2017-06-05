@@ -10,12 +10,10 @@ namespace GraphingSoftware
     public class Polynomial: Function
     {
         private Dictionary<int, decimal> _poly = new Dictionary<int, decimal>();
-        private string _polyString;
 
         public Polynomial(string Poly)
         {
             Poly = Regex.Replace(Poly, @"\s+", "");
-            _polyString = Poly;
 
             int key;
             decimal constant;
@@ -34,6 +32,12 @@ namespace GraphingSoftware
         {
             //used in factory methods only
         }
+
+        public Dictionary<int,decimal> Equation
+        {
+            get { return _poly; }
+        }
+
 
         public override string ToString()
         {
@@ -105,19 +109,61 @@ namespace GraphingSoftware
             throw new NotImplementedException();
         }
 
-        public static Polynomial operator+(Polynomial a, Polynomial b)
+        public Polynomial negate()
         {
-            throw new NotImplementedException();
+            Polynomial temp = new Polynomial();
+            foreach (KeyValuePair<int, decimal> entry in _poly)
+            {
+                temp.addMononomial(entry.Key, entry.Value * -1);
+            }
+            return temp;
         }
 
-        public static Polynomial operator-(Polynomial a, Polynomial b)
+        public static Polynomial operator +(Polynomial a, Polynomial b)
         {
-            throw new NotImplementedException();
+            Polynomial sum = new Polynomial();
+
+            foreach (KeyValuePair<int,decimal> entryA in a.Equation)
+            {
+                foreach (KeyValuePair<int,decimal> entryB in b.Equation)
+                {
+                    if (entryA.Key == entryB.Key)
+                    {
+                        sum.addMononomial(entryA.Key, entryA.Value + entryB.Value);
+                    }
+
+                    if (!(sum.Equation.ContainsKey(entryB.Key) || a.Equation.ContainsKey(entryB.Key)))
+                    {
+                        sum.addMononomial(entryB.Key, entryB.Value);
+                    }
+                }
+                if (!sum.Equation.ContainsKey(entryA.Key))
+                {
+                    sum.addMononomial(entryA.Key, entryA.Value);
+                }
+            }
+            return sum;
+        }
+
+        public static Polynomial operator -(Polynomial a, Polynomial b)
+        {
+            return a + b.negate();
         }
 
         public static Polynomial operator *(Polynomial a, Polynomial b)
         {
-            throw new NotImplementedException();
+            Polynomial temp = new Polynomial();
+            foreach (KeyValuePair<int, decimal> entryA in a.Equation)
+            {
+                foreach (KeyValuePair<int, decimal> entryB in b.Equation)
+                {
+                    if (!temp.Equation.ContainsKey(entryA.Key + entryB.Key))
+                        temp.addMononomial(entryA.Key + entryB.Key, 0);
+
+                    temp.Equation[entryA.Key + entryB.Key] += entryA.Value * entryB.Value;
+                }
+            }
+            return temp;
         }
 
         public static Polynomial operator /(Polynomial a, Polynomial b)
