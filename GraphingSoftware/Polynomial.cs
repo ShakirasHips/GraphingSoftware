@@ -168,6 +168,7 @@ namespace GraphingSoftware
 
         public static Polynomial operator /(Polynomial a, Polynomial b)
         {
+            //cant implment because it may not return a Polynomial by defintion
             throw new NotImplementedException();
         }
     }
